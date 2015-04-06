@@ -36,10 +36,10 @@ public class MapCreator {
 		}
 	}
 
-	public void create(String outputFilename) {
-		String outputFile = System.getProperty("user.dir") + File.separator + "heatmap" + File.separator + outputFilename;
+	public void create(String outputFilename, String folder) {
+		String outputFile = System.getProperty("user.dir") + File.separator + "heatmap" + File.separator + File.separator + folder + File.separator + outputFilename;
 		heatMap = new HeatMap(points, outputFile, backgroundImage);
-		heatMap.createHeatMap(0.02f); // multiplier depends on density of points. try something between 1f and 10f
+		heatMap.createHeatMap(0.15f); // multiplier depends on density of points. try something between 1f and 10f
 	}
 	
 	private BufferedImage loadImage(final String ref) {

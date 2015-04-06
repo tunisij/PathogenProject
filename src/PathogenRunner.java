@@ -10,50 +10,62 @@ public class PathogenRunner {
 	private static final Double[] HEALTH_MODIFIERS = {0.4, 1.6, 0.8, 0.9, 1.3, 1.7};
 	
 	Set<City> cities = new HashSet<City>();
-	Pathogen pathogen = new Pathogen(4 /* potency */, 1 /* stage */);
+	Pathogen pathogen = new Pathogen(20 /* potency */, 1 /* stage */);
 	PathogenBusinessController controller = new PathogenBusinessController(cities, pathogen);
-	MapCreator mapCreator = new MapCreator("background2.png");
+	MapCreator mapCreator = new MapCreator("background.png");
 	
-	private void execute(){
-		runOnCity(CITY_NAMES[0]);
+	private void execute(Integer nbrOfDays){
+		runOnCity(CITY_NAMES[3], nbrOfDays);
 	}
 	
-	public void runOnListOfCities(Set<City> cities){
-		for(Integer i = 0; i < NBR_OF_CITIES; i++){
-			this.cities.add(new City(CITY_NAMES[i], POPULATIONS[i], WEALTH_MODIFIERS[i], HEALTH_MODIFIERS[i], mapCreator.getImageHeight(), mapCreator.getImageWidth()));
-		}
-		run();
-	}
+//	public void runOnListOfCities(Set<City> cities){
+//		for(Integer i = 0; i < NBR_OF_CITIES; i++){
+//			this.cities.add(new City(CITY_NAMES[i], POPULATIONS[i]/10, WEALTH_MODIFIERS[i], HEALTH_MODIFIERS[i], mapCreator.getImageHeight(), mapCreator.getImageWidth()));
+//		}
+//		run();
+//	}
 	
-	public void runOnCity(String cityName){
+	public void runOnCity(String cityName, Integer nbrOfDays){
 		for (Integer i = 0; i < NBR_OF_CITIES; i++) {
 			if(CITY_NAMES[i].equals(cityName)){
-				cities.add(new City(CITY_NAMES[i], POPULATIONS[i], WEALTH_MODIFIERS[i], HEALTH_MODIFIERS[i], mapCreator.getImageHeight(), mapCreator.getImageWidth()));
+				cities.add(new City(CITY_NAMES[i], POPULATIONS[i]/10, WEALTH_MODIFIERS[i], HEALTH_MODIFIERS[i], mapCreator.getImageHeight(), mapCreator.getImageWidth()));
 			}
 		}
-		run();
+		printStatistics(cityName, 0);
+		for(Integer dayNbr = 1; dayNbr < nbrOfDays; dayNbr++){
+			controller.runDay();
+			printStatistics(cityName, dayNbr);
+			
+			mapCreator = new MapCreator("background.png");
+			mapCreator.addPointsByList(controller.getListofHealthy());
+			mapCreator.create("day" + dayNbr + ".png", "healthyMaps");
+			
+			mapCreator = new MapCreator("background.png");
+			mapCreator.addPointsByList(controller.getListofInfected());
+			mapCreator.create("day" + dayNbr + ".png", "infectedMaps");
+
+			mapCreator = new MapCreator("background.png");
+			mapCreator.addPointsByList(controller.getListofDead());
+			mapCreator.create("day" + dayNbr + ".png", "deathMaps");
+		}
 	}
 	
-	private void run(){
-		printStatistics();
-		controller.runDays(1);
-		printStatistics();
-		
-		mapCreator.addPointsByList(controller.getListofDead());
-		mapCreator.create("check.png");
+	private void printStatistics(String cityName, Integer dayNbr) {
+		for (Integer i = 0; i < NBR_OF_CITIES; i++) {
+			if(CITY_NAMES[i].equals(cityName)){
+				System.out.println();
+				System.out.println(cityName + ": day " + dayNbr);
+				System.out.println("---------------------------");
+				System.out.println("Healthy: " + controller.getNbrOfHealthy(cityName));
+				System.out.println("Infected: " + controller.getNbrOfInfected(cityName));
+				System.out.println("Dead: " + controller.getNbrOfDead(cityName));
+				System.out.println();
+			}
+		}
 	}
-	
-	private void printStatistics() {
-		System.out.println("Healthy: " + controller.getNbrOfHealty());
-		System.out.println("Infected: " + controller.getNbrOfInfected());
-		System.out.println("Dead: " + controller.getNbrOfDead());
-		System.out.println();
-	}
-	
-	//public Integer getNbrOfDays();
 	
 	public static void main(String args[]){
 		PathogenRunner pR = new PathogenRunner();
-		pR.execute();
+		pR.execute(100);
 	}
 }

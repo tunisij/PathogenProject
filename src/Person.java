@@ -11,9 +11,7 @@ public class Person {
 	private Integer yLocation;
 	private boolean isInfected = false;
 	private boolean isDead = false;
-	private boolean isNavigated = false;
 	private String city;
-//	private List<Integer> related = new ArrayList<>();
 
 	public Person(Double health, Integer xLocation, Integer yLocation, Integer income, String city, Integer medicineAvailable, Integer education, Integer proximityToPathogen, Double infectionLevel) {
 		this.infectionLevel = infectionLevel;
@@ -115,14 +113,6 @@ public class Person {
 		this.isDead = isDead;
 	}
 
-	public boolean isNavigated() {
-		return isNavigated;
-	}
-
-	public void setNavigated(boolean isNavigated) {
-		this.isNavigated = isNavigated;
-	}
-
 	public String getCity() {
 		return city;
 	}
@@ -130,16 +120,4 @@ public class Person {
 	public void setCity(String city) {
 		this.city = city;
 	}
-
-//	public List<Integer> getRelated() {
-//		return related;
-//	}
-//
-//	public void insertRelated(int i) {
-//		related.add(i);
-//	}
-//
-//	public void insertRelated(List<Integer> related) {
-//		this.related.addAll(related);
-//	}
 }
